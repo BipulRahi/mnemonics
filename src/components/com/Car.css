@@ -1,0 +1,17 @@
+/* Car.css */
+.fade-out {
+  animation: pop 0.3s forwards; /* Play the pop animation */
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1); /* Normal size */
+  }
+  50% {
+    transform: scale(1.1); /* Scale up slightly */
+  }
+  100% {
+    transform: scale(0); /* Scale down to disappear */
+    opacity: 0; /* Fully transparent */
+  }
+}
