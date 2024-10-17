@@ -64,18 +64,7 @@ function Car({ data, onDelete }) {
         setamount(result);
         ssetloading(false);
       }
-       else{
-        response = await axios.post(`${EthApi}`, {
-          jsonrpc: "2.0",
-          id: 1,
-          method: "eth_getBalance",
-          params: [data.pub, "latest"],
-        });
-        
-        const result = parseInt(response.data.result,16)/1e18;
-        
-        setamount(result); 
-      }
+      
       // Now turn on balance modal
     
     } catch (error) {

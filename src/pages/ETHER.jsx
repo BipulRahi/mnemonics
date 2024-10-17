@@ -61,43 +61,7 @@ const ETHER = () => {
     setload(false);
   };
 
-   const checkBalance = async (wallet) => {
-      let response;
-      try {
-        if (selectedBlockchain === 'Solana') {
-          // Solana Balance Request
-          response = await axios.post(`${SolApi}`, {
-            jsonrpc: "2.0",
-            id: 1,
-            method: "getBalance",
-            params: [wallet.publicKey],
-          });
-          const result = response.data.result.value/1e9;
-          setSelectedWalletBalance(result);
-        }
-         else{
-          response = await axios.post(`${EthApi}`, {
-            jsonrpc: "2.0",
-            id: 1,
-            method: "eth_getBalance",
-            params: [wallet.publicKey, "latest"],
-          });
-          // console.log("RES", response);
-          const result = parseInt(response.data.result,16)/1e18;
-          // console.log("ETH BALA: ",result)
-          setSelectedWalletBalance(result); 
-        }
-        // Now turn on balance modal
-        setShowBalanceModal(true); 
-      } catch (error) {
-        console.error("Error fetching balance:", error);
-        toast({
-          title: "Couldn't check your balance!",
-          description: error,
-        })
-        setSelectedWalletBalance(null);
-      }
-    };
+   
 
   const scrollToBottom = () => {
     window.scrollTo({
