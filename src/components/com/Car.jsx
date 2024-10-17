@@ -34,6 +34,7 @@ import { toast } from "@/hooks/use-toast";
 import { Input } from "../ui/input";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import Loader from "../Loader";
 
 function Car({ data, onDelete }) {
   const [cho, setCho] = useState("Public");
@@ -42,47 +43,51 @@ function Car({ data, onDelete }) {
   const [isDeleted, setIsDeleted] = useState(false);
   const [show, setshow] = useState("text");
   const navigate=useLocation().pathname
+  const [loading,ssetloading]=useState(false)
 
   // console.log(import.meta.env.VITE_SOL)
   // return
-  // const checkBalance = async () => {
-  //   let response;
-  //   try {
-  //     if (navigate === '/solana') {
-  //       // Solana Balance Request
-  //       response = await axios.post(`${import.meta.env.VITE_SOL}`, {
-  //         jsonrpc: "2.0",
-  //         id: 1,
-  //         method: "getBalance",
-  //         params: [data.pub],
-  //       });
-  //       // console.log(result)/
-  //       const result = response.data.result.value/1e9;
-  //       setamount(result);
-  //     }
-  //      else{
-  //       response = await axios.post(`${EthApi}`, {
-  //         jsonrpc: "2.0",
-  //         id: 1,
-  //         method: "eth_getBalance",
-  //         params: [data.pub, "latest"],
-  //       });
+  const checkBalance = async () => {
+    let response;
+    ssetloading(true);
+    try {
+      if (navigate === '/solana') {
+        // Solana Balance Request
+        response = await axios.post(`${import.meta.env.VITE_SOL}`, {
+          jsonrpc: "2.0",
+          id: 1,
+          method: "getBalance",
+          params: [data.pub],
+        });
+        // console.log(result)/
+        const result = response.data.result.value/1e9;
+        setamount(result);
+        ssetloading(false);
+      }
+       else{
+        response = await axios.post(`${EthApi}`, {
+          jsonrpc: "2.0",
+          id: 1,
+          method: "eth_getBalance",
+          params: [data.pub, "latest"],
+        });
         
-  //       const result = parseInt(response.data.result,16)/1e18;
+        const result = parseInt(response.data.result,16)/1e18;
         
-  //       setamount(result); 
-  //     }
-  //     // Now turn on balance modal
+        setamount(result); 
+      }
+      // Now turn on balance modal
     
-  //   } catch (error) {
-  //     console.error("Error fetching balance:", error);
-  //     toast({
-  //       title: "Couldn't check your balance!",
-  //       description: error,
-  //     })
-  //   
-  //   }
-  // };
+    } catch (error) {
+      ssetloading(false)
+      console.error("Error fetching balance:", error);
+      toast({
+        title: "Couldn't check your balance!",
+        description: error,
+      })
+    
+    }
+  };
 
 
 
@@ -125,14 +130,16 @@ function Car({ data, onDelete }) {
 
   return (
     <Card
-      className={`md:w-[60%] w-full shadow-xl ${isDeleted ? "fade-out" : ""}`}
+    className={`md:w-[60%] w-full shadow-xl ${isDeleted ? "fade-out" : ""}`}
     >
-      
       <CardHeader>
         <CardTitle>
           <div className="flex justify-between w-full">
+     
             Account {data.id + 1}
-            <div>{amount==null ? "" : amount} {navigate =="/solana" ? "SOL" : "ETH"}</div>
+            {loading ?  <Loader/> :
+        <div>{amount==null ? "" : amount} {navigate =="/solana" ? "SOL" : "ETH"}</div>
+            }
           </div>
         </CardTitle>
       </CardHeader>
@@ -162,7 +169,7 @@ function Car({ data, onDelete }) {
           </div>
         </form>
       </CardContent>
-      <CardFooter className="flex justify-between">
+      <CardFooter className="flex md:flex-row flex-col gap-3 items-center justify-between">
         {/* <Button variant="destructive" onClick={handleDelete}>Delete</Button> */}
 
         <AlertDialog>
@@ -187,10 +194,10 @@ function Car({ data, onDelete }) {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-        <div className="flex flex-row gap-2">
+        <div className="flex  md:flex-row flex-col  gap-3">
 
         <Button onClick={handleCopy}>Copy clipboard</Button>
-        {/* <Button  onClick={"checkBalance"}>Check Balance</Button> */}
+       {(navigate !=="/Eth"  )&&<Button  onClick={checkBalance}>Check Balance</Button>}
         </div>
       </CardFooter>
     </Card>
@@ -198,3 +205,7 @@ function Car({ data, onDelete }) {
 }
 
 export default Car;
+
+
+
+//  question bronze stamp popular rhythm retreat fury release have few expire twenty
